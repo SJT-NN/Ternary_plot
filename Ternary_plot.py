@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mpltern  # registers ternary projection in matplotlib
 
+st.set_page_config(page_title="Excel to Ternary Plot Viewer", layout="wide")
+
 st.title("🔺 Excel to Ternary Plot Viewer")
 
 # --- Upload Excel file ---
@@ -15,9 +17,20 @@ if uploaded_file:
     sheet_names = xls.sheet_names
     sheet_name = st.selectbox("Select sheet", sheet_names)
 
-    # Load chosen sheet
-    df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
-    st.subheader(f"Preview of Data — Sheet: {sheet_name}")
+    # Let user choose start row
+    start_row = st.number_input(
+        "Start reading data from row number (0 = first row after header):",
+        min_value=0, value=0, step=1
+    )
+
+    # Load chosen sheet, skipping rows before start_row
+    df = pd.read_excel(
+        uploaded_file,
+        sheet_name=sheet_name,
+        skiprows=range(1, start_row + 1)  # keep header (row 0), skip data rows
+    )
+
+    st.subheader(f"Preview of Data — Sheet: {sheet_name} (starting at row {start_row})")
     st.dataframe(df.head())
 
     # Column selection for ternary plot
@@ -85,5 +98,3 @@ if uploaded_file:
             ax.set_llabel(col_b)
             ax.set_rlabel(col_c)
             ax.grid(True)
-
-            
