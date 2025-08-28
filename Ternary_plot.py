@@ -19,6 +19,8 @@ if uploaded_file:
 
     # Load the selected sheet in full
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
+    # Strip spaces from headers
+    df.columns = df.columns.str.strip()
 
     st.subheader(f"Preview of Data — Sheet: {sheet_name}")
     st.dataframe(df.head())
@@ -29,6 +31,11 @@ if uploaded_file:
     col_b = st.selectbox("Column for B-axis (bottom left)", cols)
     col_c = st.selectbox("Column for C-axis (bottom right)", cols)
 
+    # --- Custom axis labels ---
+    label_a = st.text_input("Custom label for A-axis (top)", value=col_a)
+    label_b = st.text_input("Custom label for B-axis (bottom left)", value=col_b)
+    label_c = st.text_input("Custom label for C-axis (bottom right)", value=col_c)
+
     # Column selection for category/color grouping
     col_type = st.selectbox("Column for Data Type (color grouping)", ["None"] + cols)
 
@@ -38,16 +45,17 @@ if uploaded_file:
     plot_height = st.slider("Plot height (inches)", 4, 16, 7)
 
     if col_a and col_b and col_c:
-        # Build selected column list for previewing, cleaning, plotting
+        # Build selected column list
         selected_cols = [col_a, col_b, col_c]
         if col_type != "None":
             selected_cols.append(col_type)
 
-        # --- Clean data: convert axis columns to numeric & drop NaNs ---
+        # --- Clean data: convert to numeric & drop NaNs ---
         tern_df = df[selected_cols].copy()
 
         for axis_col in [col_a, col_b, col_c]:
-            tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
+            if axis_col in tern_df.columns:
+                tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
 
         tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
@@ -60,10 +68,6 @@ if uploaded_file:
                 tern_df[col_a] /= total
                 tern_df[col_b] /= total
                 tern_df[col_c] /= total
-
-            a_vals = tern_df[col_a].values
-            b_vals = tern_df[col_b].values
-            c_vals = tern_df[col_c].values
 
             # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
@@ -83,12 +87,15 @@ if uploaded_file:
                     )
                 ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
             else:
-                ax.scatter(a_vals, b_vals, c_vals, s=point_size, alpha=0.7)
+                ax.scatter(
+                    tern_df[col_a], tern_df[col_b], tern_df[col_c],
+                    s=point_size, alpha=0.7
+                )
 
-            # Axis labels and grid
-            ax.set_tlabel(col_a)
-            ax.set_llabel(col_b)
-            ax.set_rlabel(col_c)
+            # Axis labels from custom inputs
+            ax.set_tlabel(label_a)
+            ax.set_llabel(label_b)
+            ax.set_rlabel(label_c)
+
             ax.grid(True)
-
             st.pyplot(fig)
