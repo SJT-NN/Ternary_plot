@@ -17,19 +17,19 @@ if uploaded_file:
     sheet_names = xls.sheet_names
     sheet_name = st.selectbox("Select sheet", sheet_names)
 
-    # Load the selected sheet
+    # Load the selected sheet in full
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
 
     st.subheader(f"Preview of Data — Sheet: {sheet_name}")
     st.dataframe(df.head())
 
-    # Column selection for ternary plot
+    # --- Column selection for ternary plot ---
     cols = df.columns.tolist()
     col_a = st.selectbox("Column for A-axis (top)", cols)
     col_b = st.selectbox("Column for B-axis (bottom left)", cols)
     col_c = st.selectbox("Column for C-axis (bottom right)", cols)
 
-    # Column selection for data type (categorical color)
+    # Column selection for category/color grouping
     col_type = st.selectbox("Column for Data Type (color grouping)", ["None"] + cols)
 
     # --- Display controls ---
@@ -38,20 +38,23 @@ if uploaded_file:
     plot_height = st.slider("Plot height (inches)", 4, 16, 7)
 
     if col_a and col_b and col_c:
-        # Select relevant columns
+        # Build selected column list for previewing, cleaning, plotting
         selected_cols = [col_a, col_b, col_c]
         if col_type != "None":
             selected_cols.append(col_type)
 
-        # --- Clean data: convert to numeric & drop NaNs ---
+        # --- Clean data: convert axis columns to numeric & drop NaNs ---
         tern_df = df[selected_cols].copy()
-        tern_df[selected_cols[:3]] = tern_df[selected_cols[:3]].apply(pd.to_numeric, errors="coerce")
-        tern_df = tern_df.dropna(subset=selected_cols[:3])  # ensure A,B,C are numeric and non-null
+
+        for axis_col in [col_a, col_b, col_c]:
+            tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
+
+        tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
         else:
-            # Normalize so A + B + C = 1 if desired
+            # Optional normalization to sum = 1
             if st.checkbox("Normalize columns so A+B+C = 1"):
                 total = tern_df[col_a] + tern_df[col_b] + tern_df[col_c]
                 tern_df[col_a] /= total
@@ -82,6 +85,7 @@ if uploaded_file:
             else:
                 ax.scatter(a_vals, b_vals, c_vals, s=point_size, alpha=0.7)
 
+            # Axis labels and grid
             ax.set_tlabel(col_a)
             ax.set_llabel(col_b)
             ax.set_rlabel(col_c)
