@@ -17,20 +17,10 @@ if uploaded_file:
     sheet_names = xls.sheet_names
     sheet_name = st.selectbox("Select sheet", sheet_names)
 
-    # Let user choose start row
-    start_row = st.number_input(
-        "Start reading data from row number (0 = first row after header):",
-        min_value=0, value=0, step=1
-    )
+    # Load the selected sheet
+    df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
 
-    # Load chosen sheet, skipping rows before start_row
-    df = pd.read_excel(
-        uploaded_file,
-        sheet_name=sheet_name,
-        skiprows=range(1, start_row + 1)  # keep header (row 0), skip data rows
-    )
-
-    st.subheader(f"Preview of Data — Sheet: {sheet_name} (starting at row {start_row})")
+    st.subheader(f"Preview of Data — Sheet: {sheet_name}")
     st.dataframe(df.head())
 
     # Column selection for ternary plot
@@ -53,21 +43,20 @@ if uploaded_file:
         if col_type != "None":
             selected_cols.append(col_type)
 
-        # Clean data
-        tern_df = df[selected_cols].dropna()
+        # --- Clean data: convert to numeric & drop NaNs ---
+        tern_df = df[selected_cols].copy()
         tern_df[selected_cols[:3]] = tern_df[selected_cols[:3]].apply(pd.to_numeric, errors="coerce")
-        tern_df = tern_df.dropna()
+        tern_df = tern_df.dropna(subset=selected_cols[:3])  # ensure A,B,C are numeric and non-null
 
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
         else:
             # Normalize so A + B + C = 1 if desired
-            norm_choice = st.checkbox("Normalize columns so A+B+C = 1")
-            if norm_choice:
+            if st.checkbox("Normalize columns so A+B+C = 1"):
                 total = tern_df[col_a] + tern_df[col_b] + tern_df[col_c]
-                tern_df[col_a] = tern_df[col_a] / total
-                tern_df[col_b] = tern_df[col_b] / total
-                tern_df[col_c] = tern_df[col_c] / total
+                tern_df[col_a] /= total
+                tern_df[col_b] /= total
+                tern_df[col_c] /= total
 
             a_vals = tern_df[col_a].values
             b_vals = tern_df[col_b].values
@@ -78,7 +67,6 @@ if uploaded_file:
             ax = fig.add_subplot(projection='ternary')
 
             if col_type != "None":
-                # Group by category and plot each with a separate color
                 categories = tern_df[col_type].astype(str).unique()
                 cmap = plt.get_cmap("tab10")
                 for idx, cat in enumerate(categories):
@@ -98,3 +86,5 @@ if uploaded_file:
             ax.set_llabel(col_b)
             ax.set_rlabel(col_c)
             ax.grid(True)
+
+            st.pyplot(fig)
