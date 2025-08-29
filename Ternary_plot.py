@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import mpltern  # registers ternary projection in matplotlib
+import seaborn as sns
+import colorcet as cc
 
 st.set_page_config(page_title="Excel to Ternary Plot Viewer", layout="wide")
 
