@@ -75,14 +75,14 @@ if uploaded_file:
 
             if col_type != "None":
                 categories = tern_df[col_type].astype(str).unique()
-                cmap = plt.get_cmap("tab10")
+                cmap = plt.get_cmap("tab20")
                 for idx, cat in enumerate(categories):
                     sub = tern_df[tern_df[col_type].astype(str) == cat]
                     ax.scatter(
                         sub[col_a], sub[col_b], sub[col_c],
                         s=point_size,
                         alpha=0.8,
-                        color=cmap(idx % 20),
+                        color=cmap(idx % 10),
                         label=str(cat)
                     )
                 ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
