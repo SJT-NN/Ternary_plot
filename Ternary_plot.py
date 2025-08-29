@@ -7,7 +7,7 @@ import mpltern  # registers ternary projection in matplotlib
 st.set_page_config(page_title="Excel to Ternary Plot Viewer", layout="wide")
 
 st.title("🔺 Excel to Ternary Plot Viewer")
-
+st.text("The code can be found on https://github.com/SJT-NN?tab=repositories")
 # --- Upload Excel file ---
 uploaded_file = st.file_uploader("Upload Excel file", type=["xlsx"])
 
