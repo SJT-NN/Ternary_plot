@@ -82,7 +82,7 @@ if uploaded_file:
                         sub[col_a], sub[col_b], sub[col_c],
                         s=point_size,
                         alpha=0.8,
-                        color=cmap(idx % 10),
+                        color=cmap(idx % 20),
                         label=str(cat)
                     )
                 ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
