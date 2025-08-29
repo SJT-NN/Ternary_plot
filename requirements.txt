@@ -5,3 +5,5 @@ matplotlib
 scikit-learn
 openpyxl
 mpltern
+seaborn
+colorcet
