@@ -75,16 +75,33 @@ if uploaded_file:
 
             if col_type != "None":
                 categories = tern_df[col_type].astype(str).unique()
-                cmap = plt.get_cmap("tab20")
+                # Choose palette type
+                palette_source = st.selectbox(
+                    "Choose color palette source",
+                    ["Matplotlib tab20", "Seaborn deep", "Seaborn tab10", "Seaborn Set3", "ColorCET glasbey"]
+                )
+
+                # Build a color list long enough for all categories
+                if palette_source.startswith("Matplotlib"):
+                    colors = plt.get_cmap("tab20").colors
+                elif palette_source.startswith("Seaborn"):
+                    # e.g. "Seaborn deep" -> "deep"
+                    sns_name = palette_source.split(" ")[1]
+                    colors = sns.color_palette(sns_name, n_colors=len(categories))
+                elif palette_source.startswith("ColorCET"):
+                    colors = list(cc.glasbey)  # glasbey is great for many distinct categories
+
+                # Plot each category with its corresponding color
                 for idx, cat in enumerate(categories):
                     sub = tern_df[tern_df[col_type].astype(str) == cat]
                     ax.scatter(
-                        sub[col_a], sub[col_b], sub[col_c],
-                        s=point_size,
-                        alpha=0.8,
-                        color=cmap(idx % 10),
-                        label=str(cat)
-                    )
+                    sub[col_a], sub[col_b], sub[col_c],
+                    s=point_size,
+                    alpha=0.8,
+                    color=colors[idx % len(colors)],
+                    label=str(cat)
+                )
+                    
                 ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
             else:
                 ax.scatter(
