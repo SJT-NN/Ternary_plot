@@ -43,8 +43,8 @@ if uploaded_file:
 
     # --- Display controls ---
     point_size = st.slider("Scatter point size", 10, 200, 50)
-    plot_width = st.slider("Plot width (inches)", 4, 16, 7)
-    plot_height = st.slider("Plot height (inches)", 4, 16, 7)
+    plot_width = st.slider("Plot width", 4, 16, 7)
+    plot_height = st.slider("Plot height", 4, 16, 7)
 
     if col_a and col_b and col_c:
         # Build selected column list
