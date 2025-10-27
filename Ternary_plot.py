@@ -24,8 +24,8 @@ if uploaded_file:
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
 
     # Drop unnamed junk columns and strip spaces
-    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
-    df.columns = df.columns.str.strip()
+    #df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
+    #df.columns = df.columns.str.strip()
 
     st.subheader(f"Preview of Data — Sheet: {sheet_name}")
     st.dataframe(df.head())
