@@ -110,19 +110,14 @@ if uploaded_file:
                     s=point_size, alpha=0.7
                 )
 
-            # Axis labels
-            ax.set_tlabel(label_a)
-            ax.set_llabel(label_b)
-            ax.set_rlabel(label_c)
-
-            # Axis limits and ticks in percent
-            ax.set_tlim(0, 100)
-            ax.set_llim(0, 100)
-            ax.set_rlim(0, 100)
-
-            ax.taxis.set_major_locator(MultipleLocator(20))
-            ax.laxis.set_major_locator(MultipleLocator(20))
-            ax.raxis.set_major_locator(MultipleLocator(20))
-
-            ax.grid(True)
+            # Axis labels 
+            ax.set_tlabel(label_a) 
+            ax.set_llabel(label_b) 
+            ax.set_rlabel(label_c) 
+            # Axis ticks 
+            ax.taxis.set_major_locator(MultipleLocator(1/3)) 
+            ax.laxis.set_major_locator(MultipleLocator(1/3)) 
+            ax.raxis.set_major_locator(MultipleLocator(1/3)) 
+            
+            ax.grid(True) 
             st.pyplot(fig)
