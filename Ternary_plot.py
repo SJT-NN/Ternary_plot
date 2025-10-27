@@ -58,8 +58,10 @@ if uploaded_file:
         tern_df = df[selected_cols].copy()
         df.columns = df.columns.astype(str).str.strip()
         for axis_col in [col_a, col_b, col_c]:
-            tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
-
+            if isinstance(tern_df[axis_col], pd.DataFrame):
+                tern_df[axis_col] = pd.to_numeric(tern_df[axis_col].iloc[:, 0], errors="coerce")
+            else:
+                tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
         tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
         if tern_df.empty:
