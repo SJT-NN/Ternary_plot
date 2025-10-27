@@ -56,7 +56,7 @@ if uploaded_file:
 
         # --- Clean data: convert to numeric & drop NaNs ---
         tern_df = df[selected_cols].copy()
-
+        df.columns = df.columns.astype(str).str.strip()
         for axis_col in [col_a, col_b, col_c]:
             tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
 
