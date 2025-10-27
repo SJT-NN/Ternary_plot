@@ -68,14 +68,6 @@ if uploaded_file:
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
         else:
-            # Optional normalization to sum = 1
-            if st.checkbox("Normalize columns to % (A+B+C=100)"):
-                total = tern_df[col_a] + tern_df[col_b] + tern_df[col_c]
-                tern_df[col_a] = (tern_df[col_a] / total) * 100
-                tern_df[col_b] = (tern_df[col_b] / total) * 100
-                tern_df[col_c] = (tern_df[col_c] / total) * 100
-
-            # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
             ax = fig.add_subplot(projection='ternary',ternary_sum=100.0)
 
