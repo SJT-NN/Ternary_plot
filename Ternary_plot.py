@@ -103,7 +103,7 @@ if uploaded_file:
                         color=colors[idx % len(colors)],
                         label=str(cat)
                     )
-                ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
+                ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1))
             else:
                 ax.scatter(
                     tern_df[col_a], tern_df[col_b], tern_df[col_c],
