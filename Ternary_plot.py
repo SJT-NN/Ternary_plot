@@ -10,6 +10,7 @@ st.set_page_config(page_title="Excel to Ternary Plot Viewer", layout="wide")
 
 st.title("🔺 Excel to Ternary Plot Viewer")
 st.text("The code can be found on https://github.com/SJT-NN?tab=repositories")
+
 # --- Upload Excel file ---
 uploaded_file = st.file_uploader("Upload Excel file", type=["xlsx"])
 
@@ -21,7 +22,9 @@ if uploaded_file:
 
     # Load the selected sheet in full
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
-    # Strip spaces from headers
+
+    # Drop unnamed junk columns and strip spaces
+    df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     df.columns = df.columns.str.strip()
 
     st.subheader(f"Preview of Data — Sheet: {sheet_name}")
@@ -47,7 +50,6 @@ if uploaded_file:
     plot_height = st.slider("Plot height", 4, 16, 7)
 
     if col_a and col_b and col_c:
-        # Build selected column list
         selected_cols = [col_a, col_b, col_c]
         if col_type != "None":
             selected_cols.append(col_type)
@@ -56,8 +58,7 @@ if uploaded_file:
         tern_df = df[selected_cols].copy()
 
         for axis_col in [col_a, col_b, col_c]:
-            if axis_col in tern_df.columns:
-                tern_df[axis_col] = pd.to_numeric(tern_df.loc[:, axis_col].astype(str), errors="coerce")
+            tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
 
         tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
@@ -65,15 +66,11 @@ if uploaded_file:
             st.error("No valid numeric rows found after cleaning.")
         else:
             # Optional normalization to sum = 1
-            if st.checkbox("Normalize columns %"):
+            if st.checkbox("Normalize columns to % (A+B+C=100)"):
                 total = tern_df[col_a] + tern_df[col_b] + tern_df[col_c]
-                tern_df[col_a] /= total
-                tern_df[col_b] /= total
-                tern_df[col_c] /= total
-            # Scale to 0–100 for percentage display
-                tern_df[col_a] *= 100
-                tern_df[col_b] *= 100
-                tern_df[col_c] *= 100
+                tern_df[col_a] = (tern_df[col_a] / total) * 100
+                tern_df[col_b] = (tern_df[col_b] / total) * 100
+                tern_df[col_c] = (tern_df[col_c] / total) * 100
 
             # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
@@ -81,33 +78,28 @@ if uploaded_file:
 
             if col_type != "None":
                 categories = tern_df[col_type].astype(str).unique()
-                # Choose palette type
                 palette_source = st.selectbox(
                     "Choose color palette source",
                     ["Matplotlib tab20", "Seaborn deep", "Seaborn tab10", "Seaborn Set3", "ColorCET glasbey"]
                 )
 
-                # Build a color list long enough for all categories
                 if palette_source.startswith("Matplotlib"):
                     colors = plt.get_cmap("tab20").colors
                 elif palette_source.startswith("Seaborn"):
-                    # e.g. "Seaborn deep" -> "deep"
                     sns_name = palette_source.split(" ")[1]
                     colors = sns.color_palette(sns_name, n_colors=len(categories))
                 elif palette_source.startswith("ColorCET"):
-                    colors = list(cc.glasbey)  # glasbey is great for many distinct categories
+                    colors = list(cc.glasbey)
 
-                # Plot each category with its corresponding color
                 for idx, cat in enumerate(categories):
                     sub = tern_df[tern_df[col_type].astype(str) == cat]
                     ax.scatter(
-                    sub[col_a], sub[col_b], sub[col_c],
-                    s=point_size,
-                    alpha=0.8,
-                    color=colors[idx % len(colors)],
-                    label=str(cat)
-                )
-                    
+                        sub[col_a], sub[col_b], sub[col_c],
+                        s=point_size,
+                        alpha=0.8,
+                        color=colors[idx % len(colors)],
+                        label=str(cat)
+                    )
                 ax.legend(title=col_type, loc="upper right", bbox_to_anchor=(1.3, 1))
             else:
                 ax.scatter(
@@ -115,12 +107,14 @@ if uploaded_file:
                     s=point_size, alpha=0.7
                 )
 
-            # Axis labels from custom inputs
+            # Axis labels and ticks
             ax.set_tlabel(label_a)
             ax.set_llabel(label_b)
             ax.set_rlabel(label_c)
-            #ax.set_taxis_ticks([0, 20, 40, 60, 80, 100])
-            #ax.set_laxis_ticks([0, 20, 40, 60, 80, 100])
-            #ax.set_raxis_ticks([0, 20, 40, 60, 80, 100])
+
+            ax.set_taxis_ticks([0, 20, 40, 60, 80, 100])
+            ax.set_laxis_ticks([0, 20, 40, 60, 80, 100])
+            ax.set_raxis_ticks([0, 20, 40, 60, 80, 100])
+
             ax.grid(True)
             st.pyplot(fig)
