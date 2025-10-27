@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import mpltern  # registers ternary projection in matplotlib
 import seaborn as sns
 import colorcet as cc
+from matplotlib.ticker import MultipleLocator, AutoMinorLocator
 
 st.set_page_config(page_title="Excel to Ternary Plot Viewer", layout="wide")
 
@@ -115,9 +116,9 @@ if uploaded_file:
             ax.set_rlabel(label_c)
 
             # Axis ticks
-            #ax.taxis.set_ticks([0, 20, 40, 60, 80, 100])
-            #ax.laxis.set_ticks([0, 20, 40, 60, 80, 100])
-            #ax.raxis.set_ticks([0, 20, 40, 60, 80, 100])
-
+            ax.taxis.set_major_locator(MultipleLocator(1/3))
+            ax.laxis.set_major_locator(MultipleLocator(1/3))
+            ax.raxis.set_major_locator(MultipleLocator(1/3))
+            
             ax.grid(True)
             st.pyplot(fig)
