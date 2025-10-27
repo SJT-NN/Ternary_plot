@@ -57,7 +57,7 @@ if uploaded_file:
 
         for axis_col in [col_a, col_b, col_c]:
             if axis_col in tern_df.columns:
-                tern_df[axis_col] = pd.to_numeric(tern_df[axis_col].squeeze(), errors="coerce")
+                tern_df[axis_col] = pd.to_numeric(tern_df.loc[:, axis_col].astype(str), errors="coerce")
 
         tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
