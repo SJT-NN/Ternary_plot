@@ -115,9 +115,9 @@ if uploaded_file:
             ax.set_llabel(label_b) 
             ax.set_rlabel(label_c) 
             # Axis ticks 
-            ax.taxis.set_major_locator(MultipleLocator(1/3)) 
-            ax.laxis.set_major_locator(MultipleLocator(1/3)) 
-            ax.raxis.set_major_locator(MultipleLocator(1/3)) 
+            ax.taxis.set_major_locator(MultipleLocator(33)) 
+            ax.laxis.set_major_locator(MultipleLocator(33)) 
+            ax.raxis.set_major_locator(MultipleLocator(33)) 
             
             ax.grid(True) 
             st.pyplot(fig)
