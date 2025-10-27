@@ -77,7 +77,7 @@ if uploaded_file:
 
             # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
-            ax = fig.add_subplot(projection='ternary')
+            ax = fig.add_subplot(projection='ternary',ternary_sum=100.0)
 
             if col_type != "None":
                 categories = tern_df[col_type].astype(str).unique()
