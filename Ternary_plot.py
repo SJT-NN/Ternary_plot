@@ -71,9 +71,9 @@ if uploaded_file:
                 tern_df[col_b] /= total
                 tern_df[col_c] /= total
             # Scale to 0–100 for percentage display
-            tern_df[col_a] *= 100
-            tern_df[col_b] *= 100
-            tern_df[col_c] *= 100
+                tern_df[col_a] *= 100
+                tern_df[col_b] *= 100
+                tern_df[col_c] *= 100
 
             # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
