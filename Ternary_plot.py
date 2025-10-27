@@ -115,9 +115,9 @@ if uploaded_file:
             ax.set_rlabel(label_c)
 
             # Axis ticks
-            ax.taxis.set_ticks([0, 20, 40, 60, 80, 100])
-            ax.laxis.set_ticks([0, 20, 40, 60, 80, 100])
-            ax.raxis.set_ticks([0, 20, 40, 60, 80, 100])
+            #ax.taxis.set_ticks([0, 20, 40, 60, 80, 100])
+            #ax.laxis.set_ticks([0, 20, 40, 60, 80, 100])
+            #ax.raxis.set_ticks([0, 20, 40, 60, 80, 100])
 
             ax.grid(True)
             st.pyplot(fig)
