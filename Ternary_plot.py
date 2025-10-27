@@ -109,14 +109,15 @@ if uploaded_file:
                     s=point_size, alpha=0.7
                 )
 
-            # Axis labels and ticks
+            # Axis labels
             ax.set_tlabel(label_a)
             ax.set_llabel(label_b)
             ax.set_rlabel(label_c)
 
-            ax.set_taxis_ticks([0, 20, 40, 60, 80, 100])
-            ax.set_laxis_ticks([0, 20, 40, 60, 80, 100])
-            ax.set_raxis_ticks([0, 20, 40, 60, 80, 100])
+            # Axis ticks
+            ax.taxis.set_ticks([0, 20, 40, 60, 80, 100])
+            ax.laxis.set_ticks([0, 20, 40, 60, 80, 100])
+            ax.raxis.set_ticks([0, 20, 40, 60, 80, 100])
 
             ax.grid(True)
             st.pyplot(fig)
