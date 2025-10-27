@@ -34,9 +34,9 @@ if uploaded_file:
     col_c = st.selectbox("Column for C-axis (bottom right)", cols)
 
     # --- Custom axis labels ---
-    label_a = st.text_input("Custom label for A-axis (top)", value=col_a)
-    label_b = st.text_input("Custom label for B-axis (bottom left)", value=col_b)
-    label_c = st.text_input("Custom label for C-axis (bottom right)", value=col_c)
+    label_a = st.text_input("Custom label for A-axis (top)", value='Fat (%)')
+    label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%)')
+    label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%)')
 
     # Column selection for category/color grouping
     col_type = st.selectbox("Column for Data Type (color grouping)", ["None"] + cols)
@@ -65,11 +65,15 @@ if uploaded_file:
             st.error("No valid numeric rows found after cleaning.")
         else:
             # Optional normalization to sum = 1
-            if st.checkbox("Normalize columns so A+B+C = 1"):
+            if st.checkbox("Normalize columns %"):
                 total = tern_df[col_a] + tern_df[col_b] + tern_df[col_c]
                 tern_df[col_a] /= total
                 tern_df[col_b] /= total
                 tern_df[col_c] /= total
+            # Scale to 0–100 for percentage display
+            tern_df[col_a] *= 100
+            tern_df[col_b] *= 100
+            tern_df[col_c] *= 100
 
             # --- Plot ternary chart ---
             fig = plt.figure(figsize=(plot_width, plot_height))
@@ -115,6 +119,8 @@ if uploaded_file:
             ax.set_tlabel(label_a)
             ax.set_llabel(label_b)
             ax.set_rlabel(label_c)
-
+            ax.set_taxis_ticks([0, 20, 40, 60, 80, 100])
+            ax.set_laxis_ticks([0, 20, 40, 60, 80, 100])
+            ax.set_raxis_ticks([0, 20, 40, 60, 80, 100])
             ax.grid(True)
             st.pyplot(fig)
