@@ -31,7 +31,7 @@ if uploaded_file:
             break
 
     # --- Checkbox filter ---
-    average_filter = st.checkbox("Only show rows where 'Average' column is not NaN")
+average_filter = st.checkbox("Only show rows where 'Average' column is not NaN")
 
 if average_filter and average_col:
     df = df[df[average_col].notna()]
