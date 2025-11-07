@@ -23,14 +23,25 @@ if uploaded_file:
 
     # Load the selected sheet in full
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
+    # --- Find column containing the string "Average" anywhere in the dataframe ---
+    average_col = None
+        for col in df.columns:
+            if df[col].astype(str).str.contains("Average", case=False, na=False).any():
+                average_col = col
+                break
 
+    # --- Checkbox filter ---
+    average_filter = st.checkbox("Only show rows where 'Average' column is not NaN")
+
+if average_filter and average_col:
+    df = df[df[average_col].notna()]
     # Drop unnamed junk columns and strip spaces
     #df = df.loc[:, ~df.columns.str.contains("^Unnamed")]
     #df.columns = df.columns.str.strip()
 
     st.subheader(f"Preview of Data — Sheet: {sheet_name}")
     st.dataframe(df.head())
-
+    
     # --- Column selection for ternary plot ---
     cols = df.columns.tolist()
     col_a = st.selectbox("Column for A-axis (top)", cols)
