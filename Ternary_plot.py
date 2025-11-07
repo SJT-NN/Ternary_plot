@@ -25,10 +25,10 @@ if uploaded_file:
     df = pd.read_excel(uploaded_file, sheet_name=sheet_name)
     # --- Find column containing the string "Average" anywhere in the dataframe ---
     average_col = None
-        for col in df.columns:
-            if df[col].astype(str).str.contains("Average", case=False, na=False).any():
-                average_col = col
-                break
+    for col in df.columns:
+        if df[col].astype(str).str.contains("Average", case=False, na=False).any():
+            average_col = col
+            break
 
     # --- Checkbox filter ---
     average_filter = st.checkbox("Only show rows where 'Average' column is not NaN")
