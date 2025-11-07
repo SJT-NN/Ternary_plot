@@ -50,18 +50,18 @@ if uploaded_file:
     col_c = st.selectbox("Column for C-axis (bottom right)", cols)
 
     # --- Custom axis labels ---
-    label_a = st.text_input("Custom label for A-axis (top)", value='Fat (%)')
-    label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%)')
-    label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%)')
+    label_a = st.text_input("Custom label for A-axis (top)", value='Fat (%ww)')
+    label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%ww)')
+    label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%ww)')
 
 
     # Column selection for category/color grouping
     col_type = st.selectbox("Column for Data Type (color grouping)", ["None"] + cols)
 
     # --- Display controls ---
-    point_size = st.slider("Scatter point size", 10, 200, 50)
-    plot_width = st.slider("Plot width", 4, 16, 7)
-    plot_height = st.slider("Plot height", 4, 16, 7)
+    point_size = st.slider("Scatter point size", 10, 200, 20)
+    plot_width = st.slider("Plot width", 4, 16, 10)
+    plot_height = st.slider("Plot height", 4, 16, 10)
 
     if col_a and col_b and col_c:
         selected_cols = [col_a, col_b, col_c]
