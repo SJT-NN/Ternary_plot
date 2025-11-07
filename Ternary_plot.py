@@ -84,9 +84,13 @@ if uploaded_file:
         
         if energy_conversion:
             # Apply Atwater factors
-            tern_df[col_a] = tern_df[col_a] * 9
-            tern_df[col_b] = tern_df[col_b] * 4
-            tern_df[col_c] = tern_df[col_c] * 4
+            tern_df[col_a] = tern_df[col_a] * 37.7
+            tern_df[col_b] = tern_df[col_b] * 16.7
+            tern_df[col_c] = tern_df[col_c] * 16.7
+
+            label_a = "Fat (energy %)"
+            label_b = "Carbohydrates (energy %)"
+            label_c = "Protein (energy %)
             
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
