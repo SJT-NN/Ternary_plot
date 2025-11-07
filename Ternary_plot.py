@@ -53,15 +53,6 @@ if uploaded_file:
     label_a = st.text_input("Custom label for A-axis (top)", value='Fat (%)')
     label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%)')
     label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%)')
-    # --- Checkbox for energy conversion ---
-
-    energy_conversion = st.checkbox("Convert from mass (%) to energy (%)")
-
-    if energy_conversion:
-        # Apply Atwater factors
-        tern_df["Fat_energy"] = tern_df[col_a] * 9
-        tern_df["Carb_energy"] = tern_df[col_b] * 4
-        tern_df["Protein_energy"] = tern_df[col_c] * 4
 
 
     # Column selection for category/color grouping
@@ -87,6 +78,15 @@ if uploaded_file:
                 tern_df[axis_col] = pd.to_numeric(tern_df[axis_col], errors="coerce")
         tern_df = tern_df.dropna(subset=[col_a, col_b, col_c])
 
+        
+        # --- Checkbox for energy conversion ---
+        energy_conversion = st.checkbox("Convert from mass (%) to energy (%)")
+        
+        if energy_conversion:
+            # Apply Atwater factors
+            tern_df["Fat_energy"] = tern_df[col_a] * 9
+            tern_df["Carb_energy"] = tern_df[col_b] * 4
+            tern_df["Protein_energy"] = tern_df[col_c] * 4
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
         else:
