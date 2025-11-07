@@ -1,4 +1,4 @@
-import streamlit as st
+timport streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -84,9 +84,10 @@ if uploaded_file:
         
         if energy_conversion:
             # Apply Atwater factors
-            tern_df["Fat_energy"] = tern_df[col_a] * 9
-            tern_df["Carb_energy"] = tern_df[col_b] * 4
-            tern_df["Protein_energy"] = tern_df[col_c] * 4
+            tern_df[col_a] = tern_df[col_a] * 9
+            tern_df[col_b] = tern_df[col_b] * 4
+            tern_df[col_c] = tern_df[col_c] * 4
+            
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
         else:
