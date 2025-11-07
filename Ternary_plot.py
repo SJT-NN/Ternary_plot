@@ -54,7 +54,8 @@ if uploaded_file:
     label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%)')
     label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%)')
     # --- Checkbox for energy conversion ---
-energy_conversion = st.checkbox("Convert from mass (%) to energy (%)")
+
+    energy_conversion = st.checkbox("Convert from mass (%) to energy (%)")
 
     if energy_conversion:
         # Apply Atwater factors
