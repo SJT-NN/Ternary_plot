@@ -39,7 +39,7 @@ if uploaded_file:
 
     # --- Checkbox filter ---
     average_filter = st.checkbox("Only show rows where 'Average' column is not NaN")
-
+    
     # --- Find column containing the string "Average" anywhere in the dataframe ---
     if average_filter and average_col:
         df = df[df[average_col].notna()]
@@ -53,6 +53,15 @@ if uploaded_file:
     label_a = st.text_input("Custom label for A-axis (top)", value='Fat (%)')
     label_b = st.text_input("Custom label for B-axis (bottom left)", value='Carbohydrates (%)')
     label_c = st.text_input("Custom label for C-axis (bottom right)", value='Protein (%)')
+    # --- Checkbox for energy conversion ---
+energy_conversion = st.checkbox("Convert from mass (%) to energy (%)")
+
+    if energy_conversion:
+        # Apply Atwater factors
+        tern_df["Fat_energy"] = tern_df[col_a] * 9
+        tern_df["Carb_energy"] = tern_df[col_b] * 4
+        tern_df["Protein_energy"] = tern_df[col_c] * 4
+
 
     # Column selection for category/color grouping
     col_type = st.selectbox("Column for Data Type (color grouping)", ["None"] + cols)
@@ -114,6 +123,7 @@ if uploaded_file:
                     s=point_size, alpha=0.7
                 )
 
+            
             # Axis labels 
             ax.set_tlabel(label_a) 
             ax.set_llabel(label_b) 
