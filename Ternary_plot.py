@@ -90,7 +90,7 @@ if uploaded_file:
 
             label_a = "Fat (energy %)"
             label_b = "Carbohydrates (energy %)"
-            label_c = "Protein (energy %)
+            label_c = "Protein (energy %)"
             
         if tern_df.empty:
             st.error("No valid numeric rows found after cleaning.")
